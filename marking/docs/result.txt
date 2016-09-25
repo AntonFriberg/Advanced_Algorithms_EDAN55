@@ -1,0 +1,87 @@
+Size 3
+Independent Random Select
+Average 1.54, Standard Deviation 0.00.
+Next Random Not Seen
+Average 1.00, Standard Deviation 0.00.
+Next Random Not Marked
+Average 1.56, Standard Deviation 0.00.
+___________
+Size 7
+Independent Random Select
+Average 3.42, Standard Deviation 0.00.
+Next Random Not Seen
+Average 3.01, Standard Deviation 0.00.
+Next Random Not Marked
+Average 2.48, Standard Deviation 0.00.
+___________
+Size 15
+Independent Random Select
+Average 7.06, Standard Deviation 1.00.
+Next Random Not Seen
+Average 6.17, Standard Deviation 0.00.
+Next Random Not Marked
+Average 4.81, Standard Deviation 0.00.
+___________
+Size 31
+Independent Random Select
+Average 13.71, Standard Deviation 1.41.
+Next Random Not Seen
+Average 12.82, Standard Deviation 1.00.
+Next Random Not Marked
+Average 9.64, Standard Deviation 0.00.
+___________
+Size 63
+Independent Random Select
+Average 27.18, Standard Deviation 2.00.
+Next Random Not Seen
+Average 25.42, Standard Deviation 2.00.
+Next Random Not Marked
+Average 19.24, Standard Deviation 1.41.
+___________
+Size 127
+Independent Random Select
+Average 54.43, Standard Deviation 3.46.
+Next Random Not Seen
+Average 51.48, Standard Deviation 2.83.
+Next Random Not Marked
+Average 38.67, Standard Deviation 1.73.
+___________
+Size 255
+Independent Random Select
+Average 109.26, Standard Deviation 5.29.
+Next Random Not Seen
+Average 102.38, Standard Deviation 4.69.
+Next Random Not Marked
+Average 78.20, Standard Deviation 3.16.
+___________
+Size 511
+Independent Random Select
+Average 219.16, Standard Deviation 7.48.
+Next Random Not Seen
+Average 206.37, Standard Deviation 5.48.
+Next Random Not Marked
+Average 155.16, Standard Deviation 3.74.
+___________
+Size 1023
+Independent Random Select
+Average 436.54, Standard Deviation 9.06.
+Next Random Not Seen
+Average 411.39, Standard Deviation 8.37.
+Next Random Not Marked
+Average 310.52, Standard Deviation 5.74.
+___________
+Size 524287
+Independent Random Select
+Average 223497.79, Standard Deviation 223.38.
+Next Random Not Seen
+Average 210926.09, Standard Deviation 212.35.
+Next Random Not Marked
+Average 159042.41, Standard Deviation 142.97.
+___________
+Size 1048575
+Independent Random Select
+Average 447086.77, Standard Deviation 331.48.
+Next Random Not Seen
+Average 421745.07, Standard Deviation 266.27.
+Next Random Not Marked
+Average 318086.63, Standard Deviation 192.23.
