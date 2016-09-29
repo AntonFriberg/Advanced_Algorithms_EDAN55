@@ -6,7 +6,6 @@ import java.util.Random;
  * Implementation of the Maximum cut problem.
  */
 public class Maxcut {
-
     private Random r = new Random();
     private int[][] edges;
     private boolean[] chosenVertices;
@@ -16,13 +15,24 @@ public class Maxcut {
         String i1 = addDataPath("pw09_100.9.txt");
         String i2 = addDataPath("matching_1000.txt");
         Maxcut m = new Maxcut();
-        m.loadData(i1); //initialize graph from given data
-        int iterations = 100, maxSum = 0; // number of random sets to run
+        m.loadData(i2); //initialize graph from given data
+        int iterations = 100, maxSum = 0, total = 0; // number of random sets to run
         for (int i = 0; i < iterations; i++) {
             int temp = m.algR();
+            System.out.println(temp);
+            total += temp;
             if (temp>maxSum) maxSum = temp;
         }
-        System.out.println(maxSum);
+        double average = total / iterations;
+        double grade;
+        if (average > 500) {
+            grade = 100 * (average / 13658.0);
+        } else grade = 100 * average / 500.0;
+        System.out.printf("Result after %d number of iterations.%n" +
+                          "The maximum cut was %d weight-units.%n" +
+                          "The average cut was %.1f weight-units,%n" +
+                          "roughly %.1f%% of the optimal.",
+                          iterations, maxSum, average, grade);
     }
 
     private int algR() {
@@ -32,12 +42,12 @@ public class Maxcut {
         for (int i = 1; i <= vertexSize; i++) {
             chosenVertices[i] = r.nextBoolean();
         }
-        /* add weight to sum if both vertices chosen by coin flip */
+        /* add weight to sum if vertices in different set chosen by coin flip */
         for (int i[]: edges) {
             int v1     = i[0];
             int v2     = i[1];
             int weight = i[2];
-            if (chosenVertices[v1] && chosenVertices[v2]) {
+            if (chosenVertices[v1] != chosenVertices[v2]) { // not in same set
                 weightSum += weight;
             }
         }

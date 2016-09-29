@@ -71,9 +71,7 @@ All weights are integers, vertices are numbered $1,2,\ldots, n$.
 \section{Maxcut Lab Report}
 
 
-by Alice Cooper and Bob Marley\sidenote{Complete the report by filling
-  in your names and the parts marked $[\ldots]$.
-  Remove the sidenotes in your final hand-in.}
+by Anton Friberg
 
 \subsection{Running time}
 
@@ -94,12 +92,9 @@ Algorithm R uses $[\ldots]$\sidenote{Replace
 \begin{enumerate}
 \item
 For the input file  pw09\_100.9.txt with $t=100$ runs, we found
-an average cutsize of $C=[\ldots]$, roughly $[\ldots]$\% of the optimum
+an average cutsize of $C=12394$, roughly $90.7$\% of the optimum
 $\operatorname{OPT} = 13658$.
-The distribution of cutsizes looks as follows:\sidenote{Display your
-  cutsizes as a histogram. Use whatever software you like to produce
-  the image; the placeholder image on the left is constructed in the
-  \LaTeX\ source.}
+The distribution of cutsizes looks as follows:
 
 \medskip
 
@@ -118,114 +113,242 @@ The distribution of cutsizes looks as follows:\sidenote{Display your
         table[y index=0] {
           % output of 
           % perl -e "for $i (1..100) { system 'python sol/rmaxcut.py < data/pw09_100.9.txt '}"
-12296
-12401
-12176
-12414
-11767
-12458
-12407
-12551
-12363
-12526
-11865
-12353
-12159
-12504
-12130
-11616
-12347
-12201
-12473
-12368
-12196
-12274
-12064
-12398
-12733
-12620
-12402
-12231
-12442
-12360
-12567
-11650
-12334
-12543
-12108
-12523
-12256
-12524
-12642
-12040
-12404
-12408
-12606
-12094
-12484
-12457
-12459
-12326
-12307
-12282
-12276
-12459
-12107
-12474
+12392
+12275
+12020
+12639
+12501
+12592
+12587
+12297
+12470
+12463
+12663
+12444
+12498
+12475
+12158
+12432
 12410
-12109
 12308
-12471
-12588
-12473
-12338
-12499
-12233
+12383
+12544
+12659
+12261
+12368
+12404
+12539
+12583
+11839
+12566
+12180
+12256
+12264
 12453
+12309
+12453
+12473
 12448
-12541
-12488
-12497
-12230
-12393
-12335
-12446
-11503
-12304
-12612
+12349
+12545
+12287
+12360
+12619
+12539
+12351
+12601
 12378
-12108
-12684
-12422
-12557
-12441
-12334
-12400
-12369
-11734
-12237
-12631
-12289
-11773
-12460
-12366
-12355
-12502
-12323
+12304
+12342
+12483
+12497
 12543
-12271
-12415
-12227
-12711
-12370
+12391
+12384
+12466
+12386
+12447
+12430
+12426
+12359
+12208
+12410
+12312
+12571
+12582
+12534
+12554
+12526
+12538
+12566
+12375
+12465
+12582
+12331
+12249
+12234
+12438
+12411
+12537
+12073
+12395
+12648
+12258
+11971
+12516
+12551
+12295
+12390
+12475
+12489
+12323
+12529
+12095
+11706
+12455
+12176
+12354
+12198
+12216
+12225
+12302
+12341
     };
 \end{axis}
 \end{tikzpicture}
 
 \item
-For the input file matching\_1000.txt
-$[\ldots]$\sidenote{Perform the same analysis for 
-    matching\_1000.txt. This involves thinking to determine OPT.}
+For the input file matching\_1000.txt with $t=100$ runs, we found an
+average cutsize of $C=249$, roughly $50$\% of the optimum $OPT=500$.
+The optimum was determined by realizing that the input is a worst case
+scenario for our algorithm, and the optimum is to include every edge.
+The distribution of cutsizes looks as follows:\sidenote{Display your
+  cutsizes as a histogram. Use whatever software you like to produce
+  the image; the placeholder image on the left is constructed in the
+  \LaTeX\ source.}
+
+\medskip
+
+\noindent
+\begin{tikzpicture}
+\begin{axis}[
+  height= 5cm,
+  ybar interval,
+  xmin = 0,  xmax = 500,
+  xtick =       {0   ,   150,   250, 500},
+  xticklabels = { $0$, $150$, $250$,   OPT},
+  x tick label as interval = false,
+  scaled ticks = false
+]
+    \addplot+[hist={bins=100}]
+        table[y index=0] {
+          % output of
+          % perl -e "for $i (1..100) { system 'python sol/rmaxcut.py < data/matching\_1000.txt '}"
+234
+249
+226
+239
+256
+257
+269
+253
+250
+260
+244
+245
+259
+249
+249
+243
+267
+261
+254
+252
+260
+266
+259
+237
+258
+247
+254
+240
+264
+259
+231
+263
+239
+244
+234
+262
+257
+225
+260
+265
+243
+234
+225
+261
+253
+246
+267
+241
+244
+248
+243
+253
+250
+253
+252
+252
+237
+258
+246
+233
+241
+242
+240
+247
+250
+263
+257
+248
+249
+253
+258
+256
+253
+235
+248
+259
+239
+246
+242
+254
+260
+239
+262
+250
+264
+253
+237
+252
+243
+238
+272
+251
+250
+250
+254
+259
+262
+243
+263
+229
+    };
+\end{axis}
+\end{tikzpicture}
+
+\item
 \end{enumerate}
 \paragraph{Analysis of performance guarantee}
 
@@ -233,7 +356,7 @@ Clearly, Algorithm R performs quite badly on input
   matching\_1000.txt.
 We will show that it can perform \emph{no worse} than that, i.e., we
 will establish that in expectation, the cutsize $C$ satisfies $C \geq
-[\ldots]\cdot \operatorname{OPT}$.\sidenote{Replace [\ldots] by the
+\frac{1}{2}\cdot \operatorname{OPT}$.\sidenote{Replace [\ldots] by the
   right constant}
 
 
@@ -253,15 +376,12 @@ Set $X_{uv}=1$ if $uv$ crosses the cut, i.e., $u\in A$ and $v\notin A$
 or $u\notin A$ and $v\in A$.
 Otherwise, $X_{uv} = 0$.
 
-Then, $\Pr(X_{uv} = 1) = [\ldots]$.
-Now, $E[C]=[\ldots]$ Finally, we have 
-\(E[C]\geq [\ldots]\cdot \text{OPT}\) because clearly
-$[\ldots]$.\sidenote{Fill in the missing blanks in this paragraph.
-  Your calculations and arguments need to include phrases like
-  ``because BLA and BLA are independent'' or ``disjoint,'' and ``by
-  linearity of expectation'' and ``because the weights are positive.''
-
-}
+Then, $\Pr(X_{uv} = 1) = \frac{1}{2}$ because $X_{uv}=1$ and $X_{uv}=0$
+are disjoint with equal probabilities.
+Now, $E[C]= \sum{X_{uv} \cdot w(e)}$ Finally, we have
+\(E[C]\geq \frac{1}{2}\cdot \text{OPT}\) because clearly
+every cut has a size of at least $\frac{1}{2}\cdot W$ and we want as
+many cuts as possible since all weights are positive.
 
 
 \newpage
