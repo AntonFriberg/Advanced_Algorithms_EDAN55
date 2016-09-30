@@ -26,6 +26,7 @@ public class IndependentSet {
     private int algR0(List<List<Integer>> adjMatrix) {
         System.out.println(adjMatrix.size());
         if (adjMatrix.size() == 0) return 0;
+        
 
         int[] numberOfNeighbors = countNeighbors(adjMatrix);
         /* check for vertex without neighbors */
