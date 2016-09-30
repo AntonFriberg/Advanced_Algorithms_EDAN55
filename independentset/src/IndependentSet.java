@@ -24,13 +24,14 @@ public class IndependentSet {
     }
 
     private int algR0(List<List<Integer>> adjMatrix) {
-        System.out.println(adjMatrix.size());
+        System.out.println("Size: " + adjMatrix.size());
         if (adjMatrix.size() == 0) return 0;
 
         int[] numberOfNeighbors = countNeighbors(adjMatrix);
         /* check for vertex without neighbors */
         for (int i = 0; i < numberOfNeighbors.length; i++) {
             if (numberOfNeighbors[i] == 0) {
+                System.out.println("No neighbor!");
                 return 1 + algR0(eliminate(i, adjMatrix));
             }
         }
@@ -43,17 +44,22 @@ public class IndependentSet {
             }
         }
         List<List<Integer>> adjMatrix2 = copy(adjMatrix);
+        System.out.println(adjMatrix.size());
         int r1 = 1 + algR0(eliminate(neighbors(vertex, adjMatrix), adjMatrix));
         int r2 = algR0(eliminate(vertex, adjMatrix2));
         return maximumOf(r1, r2);
     }
 
     private List<List<Integer>> copy(List<List<Integer>> adjMatrix) {
-        List<List<Integer>> listCopy= new LinkedList<>();
-        for (List<Integer> list : adjMatrix) {
-            listCopy.add(list);
+        List<List<Integer>> adjCopy= new LinkedList<List<Integer>>();
+        for (int i = adjMatrix.size()-1; i >= 0; i--) {
+            List<Integer> list = new LinkedList<Integer>();
+            for (int j = adjMatrix.get(i).size()-1; j >= 0; j--) {
+                list.add(adjMatrix.get(i).get(j));
+            }
+            adjCopy.add(list);
         }
-        return listCopy;
+        return adjCopy;
     }
 
     private int maximumOf(int i1, int i2) {
@@ -82,7 +88,6 @@ public class IndependentSet {
         for (int i = positions.size()-1; i >= 0; i--) {
             int pos = positions.get(i);
             for (List<Integer> list : adjMatrix) {
-                System.out.println(list);
                 list.remove(pos);
             }
             adjMatrix.remove(pos);
@@ -95,6 +100,7 @@ public class IndependentSet {
         int v = 0;
         for (List<Integer> neighbors : adjMatrix) {
             int count = 0;
+            System.out.println("List: " + neighbors);
             for (int i : neighbors) {
                 if (i == 1) count++;
             }
