@@ -75,15 +75,11 @@ by Anton Friberg
 
 \subsection{Running time}
 
-The running time of algorithm~R is $[\ldots]$\sidenote{Replace
-  $[\ldots]$ by a function of $n$ and/or $m$. You can use asymptotic
-  notation. This is supposed to be easy.}.
+The running time of algorithm~R is $O(n+m)$.
 
 \subsection{Randomness}
 
-Algorithm R uses $[\ldots]$\sidenote{Replace
-  $[\ldots]$ by a function of $n$ and/or $m$. Do not use asymptotic
-  notation. This is supposed to be easy.} random bits.
+Algorithm R uses $n$ random bits.
 
 \subsection{Solution quality}
 
@@ -111,7 +107,7 @@ The distribution of cutsizes looks as follows:
 ]
     \addplot+[hist={bins=100}]
         table[y index=0] {
-          % output of 
+          % output of
           % perl -e "for $i (1..100) { system 'python sol/rmaxcut.py < data/pw09_100.9.txt '}"
 12392
 12275
@@ -352,7 +348,7 @@ The distribution of cutsizes looks as follows:\sidenote{Display your
 \end{enumerate}
 \paragraph{Analysis of performance guarantee}
 
-Clearly, Algorithm R performs quite badly on input 
+Clearly, Algorithm R performs quite badly on input
   matching\_1000.txt.
 We will show that it can perform \emph{no worse} than that, i.e., we
 will establish that in expectation, the cutsize $C$ satisfies $C \geq
@@ -387,7 +383,7 @@ many cuts as possible since all weights are positive.
 \newpage
 \section{Optional: Derandomising Algorithm R}
 
-\subsection{Algorithm L} 
+\subsection{Algorithm L}
 
 
 We now reduce the number of random bits used by the algorithm to $\log
