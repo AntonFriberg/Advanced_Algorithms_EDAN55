@@ -152,9 +152,6 @@ public class IndependentSet {
             cloneMatrix.get(i).remove(neighbor1);
             cloneMatrix.get(i).remove(neighbor2);
         }
-        for (Integer i : neighborhood) {
-
-        }
 
         return cloneMatrix;
     }
