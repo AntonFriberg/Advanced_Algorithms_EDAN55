@@ -1,15 +1,12 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Anton Friberg on 30/09/16.
+ * Implementation of the Maximum Independent Set.
  */
 public class IndependentSet {
+    int recursions;
 
     public static void main(String[] args) {
         IndependentSet s = new IndependentSet();
@@ -17,127 +14,202 @@ public class IndependentSet {
     }
 
     private void run() {
-        String g4 = addDataPath("g4.in");
-        List<List<Integer>> adjMatrix = loadData(g4);
-        int result = algR0(adjMatrix);
-        System.out.println("Result: " + result);
+        String inputs[] = new String[]{"4", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120", "130"};
+        for (int i = 0; i < inputs.length; i++) {
+            inputs[i] = "g" + inputs[i] + ".in";
+            inputs[i] = addDataPath(inputs[i]);
+        }
+
+        System.out.printf("%-10s %10s %10s %20s%n", "file", "|V|", "alpha(G)", "recursive calls");
+        for (int i = 0; i < 5; i++) {
+            HashMap<Integer, List<Integer>> adjMatrix = loadData(inputs[i]);
+            int size = adjMatrix.size();
+            int result = algorithm_R_0(adjMatrix);
+            System.out.printf("%-10s %10d %10d %20d%n", "g" + size + ".in", size, result, recursions);
+        }
+
+        recursions = 0;
+
+        System.out.printf("%-10s %10s %10s %20s%n", "file", "|V|", "alpha(G)", "recursive calls");
+        for (int i = 0; i < 10; i++) {
+            HashMap<Integer, List<Integer>> adjMatrix = loadData(inputs[i]);
+            int size = adjMatrix.size();
+            int result = algorithm_R_1(adjMatrix);
+            System.out.printf("%-10s %10d %10d %20d%n", "g" + size + ".in", size, result, recursions);
+        }
+
+        System.out.printf("%-10s %10s %10s %20s%n", "file", "|V|", "alpha(G)", "recursive calls");
+        for (int i = 0; i < 10; i++) {
+            HashMap<Integer, List<Integer>> adjMatrix = loadData(inputs[i]);
+            int size = adjMatrix.size();
+            int result = algorithm_R_2(adjMatrix);
+            System.out.printf("%-10s %10d %10d %20d%n", "g" + size + ".in", size, result, recursions);
+        }
+
+
     }
 
-    private int algR0(List<List<Integer>> adjMatrix) {
-        System.out.println("Size: " + adjMatrix.size());
-        if (adjMatrix.size() == 0) return 0;
+    private int algorithm_R_0(HashMap<Integer, List<Integer>> adjMatrix) {
+        recursions++;
+        if (adjMatrix.isEmpty()) return 0;      // base case
 
-        int[] numberOfNeighbors = countNeighbors(adjMatrix);
-        /* check for vertex without neighbors */
-        for (int i = 0; i < numberOfNeighbors.length; i++) {
-            if (numberOfNeighbors[i] == 0) {
-                System.out.println("No neighbor!");
-                return 1 + algR0(eliminate(i, adjMatrix));
+        for (Integer i : adjMatrix.keySet()) {
+            if (adjMatrix.get(i).isEmpty()) {   // if vertex without neighbor
+                adjMatrix.remove(i);
+                return (1 + algorithm_R_0(copy(adjMatrix)));
             }
         }
 
-        int maxDegree = 0, vertex = 0;
-        for (int i = 0; i < numberOfNeighbors.length; i++) {
-            if (numberOfNeighbors[i] > maxDegree) {
-                maxDegree = numberOfNeighbors[i];
-                vertex = i;
+        int maximum = 0;
+        int vertex = 0;
+        for (Integer i : adjMatrix.keySet()) {
+            if (adjMatrix.get(i).size() > maximum) {
+                maximum = adjMatrix.get(i).size();      // maximum degree
+                vertex = i;                             // vertex with maximum degree
             }
         }
-        List<List<Integer>> adjMatrix2 = copy(adjMatrix);
-        System.out.println(adjMatrix.size());
-        int r1 = 1 + algR0(eliminate(neighbors(vertex, adjMatrix), adjMatrix));
-        int r2 = algR0(eliminate(vertex, adjMatrix2));
-        return maximumOf(r1, r2);
+        return Math.max(1+ algorithm_R_0(removeVAndNeighbors(adjMatrix, vertex)), algorithm_R_0(removeV(adjMatrix, vertex)));   // recursive call
     }
 
-    private List<List<Integer>> copy(List<List<Integer>> adjMatrix) {
-        List<List<Integer>> adjCopy= new LinkedList<List<Integer>>();
-        for (int i = adjMatrix.size()-1; i >= 0; i--) {
-            List<Integer> list = new LinkedList<Integer>();
-            for (int j = adjMatrix.get(i).size()-1; j >= 0; j--) {
-                list.add(adjMatrix.get(i).get(j));
+    private int algorithm_R_1(HashMap<Integer, List<Integer>> adjMatrix) {
+        recursions++;
+        if (adjMatrix.isEmpty()) return 0;      // base case
+
+        for (Integer i : adjMatrix.keySet()) {  // exactly 1 neighbor
+            if (adjMatrix.get(i).size() == 1) {
+                return 1 + algorithm_R_1(removeVAndNeighbors(adjMatrix, i));
             }
-            adjCopy.add(list);
         }
-        return adjCopy;
-    }
 
-    private int maximumOf(int i1, int i2) {
-        return (i1 > i2) ? i1 : i2;
-    }
-
-    private List<Integer> neighbors(int vertex, List<List<Integer>> adjMatrix) {
-        List<Integer> indexOfNeighbors = new LinkedList<Integer>();
-        List<Integer> vector = adjMatrix.get(vertex);
-        for (int i = 0; i < vector.size(); i++) {
-            if (vector.get(i) == 1) indexOfNeighbors.add(i);
-        }
-        return indexOfNeighbors;
-    }
-
-    private List<List<Integer>> eliminate(int pos, List<List<Integer>> adjMatrix) {
-        adjMatrix.remove(pos);
-        for (List<Integer> list : adjMatrix) {
-            list.remove(pos);
-        }
-        return adjMatrix;
-    }
-
-    private List<List<Integer>> eliminate(List<Integer> positions, List<List<Integer>> adjMatrix) {
-        /* remove vertices backwards in order to keep inside bounds */
-        for (int i = positions.size()-1; i >= 0; i--) {
-            int pos = positions.get(i);
-            for (List<Integer> list : adjMatrix) {
-                list.remove(pos);
+        for (Integer i : adjMatrix.keySet()) {
+            if (adjMatrix.get(i).isEmpty()) {   // if vertex without neighbor
+                adjMatrix.remove(i);
+                return (1 + algorithm_R_1(copy(adjMatrix)));
             }
-            adjMatrix.remove(pos);
         }
-        return adjMatrix;
-    }
 
-    private int[] countNeighbors(List<List<Integer>> adjMatrix) {
-        int[] numberOfNeighbors = new int[adjMatrix.size()];
-        int v = 0;
-        for (List<Integer> neighbors : adjMatrix) {
-            int count = 0;
-            System.out.println("List: " + neighbors);
-            for (int i : neighbors) {
-                if (i == 1) count++;
+        int maximum = 0;
+        int vertex = 0;
+        for (Integer i : adjMatrix.keySet()) {
+            if (adjMatrix.get(i).size() > maximum) {
+                maximum = adjMatrix.get(i).size();      // maximum degree
+                vertex = i;                             // vertex with maximum degree
             }
-            numberOfNeighbors[v++] = count;
         }
-        return numberOfNeighbors;
+        return Math.max(1+ algorithm_R_1(removeVAndNeighbors(adjMatrix, vertex)), algorithm_R_1(removeV(adjMatrix, vertex)));   // recursive call
     }
 
-    private static String addDataPath(String file){
+    private int algorithm_R_2(HashMap<Integer, List<Integer>> adjMatrix) {
+        recursions++;
+        if (adjMatrix.isEmpty()) return 0;      // base case
+
+        for (Integer i : adjMatrix.keySet()) {  // exactly 2 neighbor
+            if (adjMatrix.get(i).size() == 2) {
+                Integer neighbor1 = new Integer(adjMatrix.get(i).get(0));
+                Integer neighbor2 = new Integer(adjMatrix.get(i).get(1));
+                if (adjMatrix.get(neighbor1).contains(neighbor2)) {
+                    return 1 + algorithm_R_2(removeVAndNeighbors(adjMatrix, i));
+                } else {
+                    return 1 + algorithm_R_2(removeVAndAddZ(adjMatrix, i));
+                }
+            }
+        }
+
+        for (Integer i : adjMatrix.keySet()) {  // exactly 1 neighbor
+            if (adjMatrix.get(i).size() == 1) {
+                return 1 + algorithm_R_2(removeVAndNeighbors(adjMatrix, i));
+            }
+        }
+
+        for (Integer i : adjMatrix.keySet()) {
+            if (adjMatrix.get(i).isEmpty()) {   // if vertex without neighbor
+                adjMatrix.remove(i);
+                return (1 + algorithm_R_2(adjMatrix));
+            }
+        }
+
+        int maximum = 0;
+        int vertex = 0;
+        for (Integer i : adjMatrix.keySet()) {
+            if (adjMatrix.get(i).size() > maximum) {
+                maximum = adjMatrix.get(i).size();      // maximum degree
+                vertex = i;                             // vertex with maximum degree
+            }
+        }
+        return Math.max(1+ algorithm_R_2(removeVAndNeighbors(adjMatrix, vertex)), algorithm_R_2(removeV(adjMatrix, vertex)));   // recursive call
+    }
+
+    private HashMap<Integer,List<Integer>> removeVAndAddZ(HashMap<Integer, List<Integer>> adjMatrix, Integer vertex) {
+        HashMap<Integer, List<Integer>> cloneMatrix = copy(adjMatrix);
+        Integer neighbor1 = new Integer(adjMatrix.get(vertex).get(0));
+        Integer neighbor2 = new Integer(adjMatrix.get(vertex).get(1));
+
+        /* For cloneMatrix remove vertex and its neighbors */
+        cloneMatrix.remove(vertex);
+        cloneMatrix.remove(neighbor2);              //keep neighbor1 and let it serve as new vertex Z
+        for (Integer i : cloneMatrix.keySet()) {
+            cloneMatrix.get(i).remove(vertex);
+            cloneMatrix.get(i).remove(neighbor1);
+            cloneMatrix.get(i).remove(neighbor2);
+        }
+
+        return cloneMatrix;
+    }
+
+    private HashMap<Integer, List<Integer>> removeVAndNeighbors(HashMap<Integer, List<Integer>> adjMatrix, Integer vertex) {
+        HashMap<Integer, List<Integer>> cloneMatrix = copy(adjMatrix);
+        List<Integer> neighborhood = new ArrayList<>(adjMatrix.get(vertex));
+        /* For cloneMatrix remove vertex and its neighbors */
+        cloneMatrix.remove(vertex);
+        for (Integer i : neighborhood) cloneMatrix.remove(i);
+        for (Integer i : cloneMatrix.keySet()) {
+            cloneMatrix.get(i).remove(vertex);
+            for (Integer j : neighborhood) cloneMatrix.get(i).remove(j);
+        }
+        return cloneMatrix;
+    }
+
+    private HashMap<Integer, List<Integer>> removeV(HashMap<Integer, List<Integer>> adjMatrix, Integer vertex) {
+        HashMap<Integer, List<Integer>> cloneMatrix = copy(adjMatrix);
+        /* For adjMatrix remove vertex */
+        cloneMatrix.remove(vertex);
+        for (Integer i : cloneMatrix.keySet()) {
+            cloneMatrix.get(i).remove(vertex); // Integer required instead of int to differ obj from index
+        }
+        return cloneMatrix;
+    }
+
+    private HashMap<Integer, List<Integer>> copy(HashMap<Integer, List<Integer>> adjMatrix) {
+        HashMap<Integer, List<Integer>> cloneMatrix = new HashMap<Integer, List<Integer>>();
+        for (Integer i : adjMatrix.keySet()) {
+            ArrayList<Integer> vertices = new ArrayList<>();
+            vertices.addAll(adjMatrix.get(i));
+            cloneMatrix.put(i, vertices);
+        }
+        return cloneMatrix;
+    }
+
+    private String addDataPath(String file){
         String projectPath = new File("").getAbsolutePath();
         String dataPath = "/independentset/data/";
         return projectPath + dataPath + file;
     }
 
-    private List<List<Integer>> loadData(String input) {
-        List<List<Integer>> adjMatrix = new LinkedList<List<Integer>>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(input))) {
-            String line = reader.readLine();
+    private HashMap<Integer, List<Integer>> loadData(String input) {
+        HashMap<Integer, List<Integer>> adjMatrix = new HashMap<Integer, List<Integer>>();
+        try  {
+            Scanner s = new Scanner(new File(input));
             /* Read the number of vertices */
-            int n = Integer.parseInt(line);
-            /* initialize the edges and their weight */
-            int i = 0;
-            while((line = reader.readLine()) != null) {
-                String adjacencyVector[] = line.split(" ");
-                int[] tempArray = Arrays.stream(adjacencyVector).mapToInt(Integer::parseInt).toArray();
-                List<Integer> tempList= new LinkedList<Integer>();
-                for (int j: tempArray) {
-                    tempList.add(j);
+            int n = s.nextInt();
+            /*
+            Initialize the graph as an adjacency matrix with neighbors
+            index as list on each vertex, note start index 1 for consistency.*/
+            for (int i = 1; i <= n; i++) {
+                adjMatrix.put(i, new ArrayList<>());
+                for (int j = 1; j <= n; j++) {
+                    if(s.nextInt() == 1) adjMatrix.get(i).add(j);
                 }
-                adjMatrix.add(tempList);
             }
-//            for (int j = 0; j < adjMatrix.size(); j++) {
-//                for (int k = 0; k < adjMatrix.get(j).size(); k++) {
-//                    System.out.print(" " + adjMatrix.get(j).get(k));
-//                }
-//                System.out.println();
-//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
