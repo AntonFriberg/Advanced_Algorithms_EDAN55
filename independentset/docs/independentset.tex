@@ -329,15 +329,17 @@ file & $|V|$ & $\alpha(G)$\\
 \section{Independent Set Lab Report}
 
 
-by Alice Cooper and Bob Marley\sidenote{Complete the report by filling
-  in your names and the parts marked $[\ldots]$.
-  Remove the sidenotes in your final hand-in.}
+by Anton Friberg
 
 \subsection{Correctness}
-Algorithm R1 correctly computes $\alpha(G)$ because $[\ldots]$.\sidenote{Fill in the $[\dots]$ with an argument why R1 indeed computes the size of the maximum independent set. Use as little mathematical notation as necessary. A ``proof'' is whatever convinces me.}
+Algorithm R1 correctly computes $\alpha(G)$ because the two vertices removed by the step exactly contribute 1 to the
+resulting independent set. Either one of the vertices will always be included in the set and the rest of the graph is
+not compromised for the rest of the algorithm.
 
 \noindent
-Algorithm R2 correctly computes $\alpha(G)$ because $[\ldots]$.
+Algorithm R2 correctly computes $\alpha(G)$ because if the two other verices has a connection we in the same way as
+above are only able to include one of the tree vertices in our independent set (triangle). If the other two vertices are
+not connected we can include at least one and perhaps even two if the rest of the graph allows it.
 
 \subsection{Empirical Running time}
 

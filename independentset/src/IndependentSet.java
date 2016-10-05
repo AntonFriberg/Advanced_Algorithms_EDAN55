@@ -203,6 +203,7 @@ public class IndependentSet {
 
     private HashMap<Integer, List<Integer>> loadData(String input) {
         HashMap<Integer, List<Integer>> adjMatrix = new HashMap<>();
+
         try  {
             Scanner s = new Scanner(new File(input));
             /* Read the number of vertices */
