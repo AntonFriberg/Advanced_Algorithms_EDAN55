@@ -6,7 +6,7 @@ import java.util.*;
  * Implementation of the Maximum Independent Set.
  */
 public class IndependentSet {
-    int recursions;
+    private int recursions;
 
     public static void main(String[] args) {
         IndependentSet s = new IndependentSet();
@@ -31,21 +31,22 @@ public class IndependentSet {
         recursions = 0;
 
         System.out.printf("%-10s %10s %10s %20s%n", "file", "|V|", "alpha(G)", "recursive calls");
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             HashMap<Integer, List<Integer>> adjMatrix = loadData(inputs[i]);
             int size = adjMatrix.size();
             int result = algorithm_R_1(adjMatrix);
             System.out.printf("%-10s %10d %10d %20d%n", "g" + size + ".in", size, result, recursions);
         }
 
+        recursions = 0;
+
         System.out.printf("%-10s %10s %10s %20s%n", "file", "|V|", "alpha(G)", "recursive calls");
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 12; i++) {
             HashMap<Integer, List<Integer>> adjMatrix = loadData(inputs[i]);
             int size = adjMatrix.size();
             int result = algorithm_R_2(adjMatrix);
             System.out.printf("%-10s %10d %10d %20d%n", "g" + size + ".in", size, result, recursions);
         }
-
 
     }
 
@@ -105,8 +106,9 @@ public class IndependentSet {
 
         for (Integer i : adjMatrix.keySet()) {  // exactly 2 neighbor
             if (adjMatrix.get(i).size() == 2) {
-                Integer neighbor1 = new Integer(adjMatrix.get(i).get(0));
-                Integer neighbor2 = new Integer(adjMatrix.get(i).get(1));
+                Integer neighbor1 = adjMatrix.get(i).get(0);
+                Integer neighbor2 = adjMatrix.get(i).get(1);
+
                 if (adjMatrix.get(neighbor1).contains(neighbor2)) {
                     return 1 + algorithm_R_2(removeVAndNeighbors(adjMatrix, i));
                 } else {
@@ -141,18 +143,22 @@ public class IndependentSet {
 
     private HashMap<Integer,List<Integer>> removeVAndAddZ(HashMap<Integer, List<Integer>> adjMatrix, Integer vertex) {
         HashMap<Integer, List<Integer>> cloneMatrix = copy(adjMatrix);
-        Integer neighbor1 = new Integer(adjMatrix.get(vertex).get(0));
-        Integer neighbor2 = new Integer(adjMatrix.get(vertex).get(1));
+        Integer n1 = adjMatrix.get(vertex).get(0);
+        Integer n2 = adjMatrix.get(vertex).get(1);
 
-        /* For cloneMatrix remove vertex and its neighbors */
-        cloneMatrix.remove(vertex);
-        cloneMatrix.remove(neighbor2);              //keep neighbor1 and let it serve as new vertex Z
-        for (Integer i : cloneMatrix.keySet()) {    // merge neighbors
-            cloneMatrix.get(i).remove(vertex);
-            cloneMatrix.get(i).remove(neighbor1);
-            cloneMatrix.get(i).remove(neighbor2);
+        List<Integer> n1Neighbors = cloneMatrix.get(n1);
+        List<Integer> n2Neighbors = cloneMatrix.get(n2);
+
+        for (Integer n : n2Neighbors) {
+            cloneMatrix.get(n).remove(n2);
+            if (!cloneMatrix.get(n).contains(n1)) {
+                cloneMatrix.get(n).add(n1);
+                n1Neighbors.add(n);
+            }
         }
-
+        cloneMatrix.remove(vertex);
+        cloneMatrix.remove(n2);
+        cloneMatrix.get(n1).remove(vertex);
         return cloneMatrix;
     }
 
@@ -180,7 +186,7 @@ public class IndependentSet {
     }
 
     private HashMap<Integer, List<Integer>> copy(HashMap<Integer, List<Integer>> adjMatrix) {
-        HashMap<Integer, List<Integer>> cloneMatrix = new HashMap<Integer, List<Integer>>();
+        HashMap<Integer, List<Integer>> cloneMatrix = new HashMap<>();
         for (Integer i : adjMatrix.keySet()) {
             ArrayList<Integer> vertices = new ArrayList<>();
             vertices.addAll(adjMatrix.get(i));
@@ -196,7 +202,7 @@ public class IndependentSet {
     }
 
     private HashMap<Integer, List<Integer>> loadData(String input) {
-        HashMap<Integer, List<Integer>> adjMatrix = new HashMap<Integer, List<Integer>>();
+        HashMap<Integer, List<Integer>> adjMatrix = new HashMap<>();
         try  {
             Scanner s = new Scanner(new File(input));
             /* Read the number of vertices */
@@ -205,7 +211,8 @@ public class IndependentSet {
             Initialize the graph as an adjacency matrix with neighbors
             index as list on each vertex, note start index 1 for consistency.*/
             for (int i = 1; i <= n; i++) {
-                adjMatrix.put(i, new ArrayList<>());
+                List<Integer> temp = new ArrayList<>();
+                adjMatrix.put(i, temp);
                 for (int j = 1; j <= n; j++) {
                     if(s.nextInt() == 1) adjMatrix.get(i).add(j);
                 }
