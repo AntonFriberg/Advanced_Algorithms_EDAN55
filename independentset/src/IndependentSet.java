@@ -6,7 +6,7 @@ import java.util.*;
  * Implementation of the Maximum Independent Set.
  */
 public class IndependentSet {
-    private int recursions;
+    private double recursions;
 
     public static void main(String[] args) {
         IndependentSet s = new IndependentSet();
@@ -25,7 +25,8 @@ public class IndependentSet {
             HashMap<Integer, List<Integer>> adjMatrix = loadData(inputs[i]);
             int size = adjMatrix.size();
             int result = algorithm_R_0(adjMatrix);
-            System.out.printf("%-10s %10d %10d %20d%n", "g" + size + ".in", size, result, recursions);
+            double r = (double) recursions;
+            System.out.printf("%-10s %10d %10d %20.1f%n", "g" + size + ".in", size, result, Math.log10(r));
         }
 
         recursions = 0;
@@ -35,7 +36,8 @@ public class IndependentSet {
             HashMap<Integer, List<Integer>> adjMatrix = loadData(inputs[i]);
             int size = adjMatrix.size();
             int result = algorithm_R_1(adjMatrix);
-            System.out.printf("%-10s %10d %10d %20d%n", "g" + size + ".in", size, result, recursions);
+            double r = (double) recursions;
+            System.out.printf("%-10s %10d %10d %20.1f%n", "g" + size + ".in", size, result, Math.log10(r));
         }
 
         recursions = 0;
@@ -45,7 +47,8 @@ public class IndependentSet {
             HashMap<Integer, List<Integer>> adjMatrix = loadData(inputs[i]);
             int size = adjMatrix.size();
             int result = algorithm_R_2(adjMatrix);
-            System.out.printf("%-10s %10d %10d %20d%n", "g" + size + ".in", size, result, recursions);
+            double r = (double) recursions;
+            System.out.printf("%-10s %10d %10d %20.1f%n", "g" + size + ".in", size, result, Math.log10(r));
         }
 
     }
