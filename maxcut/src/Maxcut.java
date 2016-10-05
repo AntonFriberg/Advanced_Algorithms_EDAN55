@@ -15,7 +15,9 @@ public class Maxcut {
         String i1 = addDataPath("pw09_100.9.txt");
         String i2 = addDataPath("matching_1000.txt");
         Maxcut m = new Maxcut();
-        m.loadData(i2); //initialize graph from given data
+
+        m.loadData(i1); //initialize graph from given data
+
         int iterations = 100, maxSum = 0, total = 0; // number of random sets to run
         for (int i = 0; i < iterations; i++) {
             int temp = m.algR();
