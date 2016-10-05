@@ -147,7 +147,7 @@ public class IndependentSet {
         /* For cloneMatrix remove vertex and its neighbors */
         cloneMatrix.remove(vertex);
         cloneMatrix.remove(neighbor2);              //keep neighbor1 and let it serve as new vertex Z
-        for (Integer i : cloneMatrix.keySet()) {
+        for (Integer i : cloneMatrix.keySet()) {    // merge neighbors
             cloneMatrix.get(i).remove(vertex);
             cloneMatrix.get(i).remove(neighbor1);
             cloneMatrix.get(i).remove(neighbor2);
