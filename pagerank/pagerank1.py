@@ -17,15 +17,32 @@ for line in f:
 
 print G
 
+
+def check_stability(l1, l2):
+    c = [0] * len(l1)
+    for x in xrange(len(l1)):
+        if float(str(l1[x])[:6]) == float(str(l2[x])[:6]):
+            c[x] = 1
+    return not (0 in c)
+
+
 alpha = 0.85  # damping factor
 visits = [0] * n
 pos = 0
+stableIt = 0
+result = [0] * n
 for i in xrange(iterations):
     visits[pos] += 1
     if len(G[pos]) != 0 and random.random() < alpha:
         pos = G[pos][random.randint(0, len(G[pos]) - 1)]
     else:
         pos = random.randint(0, n - 1)
+    stableIt += 1
+    temp = map(lambda x: float(x) / stableIt, visits)
+    if check_stability(temp, result):
+        break
+    else:
+        result = temp
 
-rf = map(lambda x: float(x) / iterations * 100, visits)
-print rf
+print result
+print stableIt

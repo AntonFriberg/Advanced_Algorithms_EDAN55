@@ -171,9 +171,7 @@ M. Ripeanu and I. Foster and A. Iamnitchi. \emph{Mapping the Gnutella
 \section{Pagerank Lab Report}
 
 
-by Alice Cooper and Bob Marley\sidenote{Complete the report by filling
-  in your names and the parts marked $[\ldots]$.
-  Remove the sidenotes in your final hand-in.}
+by Anton Friberg
 
 \subsection{Transition probabilities}
 
@@ -183,10 +181,10 @@ is\sidenote{Fill in the right values. Set $\alpha=\frac{85}{100}$.}
 P = 
 \left(
 \begin{array}{cccc}
-1 & 6 & \pi & 1\\
-1 & 1/e & -2  & \cdots\\
-1 & 1 & 0 \\
-\vdots
+0.04 & 0.60 & 0.32 & 0.04 \\
+0.04 & 0.04 & 0.89 & 0.04 \\
+0.32 & 0.32 & 0.04 & 0.32 \\
+0.25 & 0.25 & 0.25 & 0.25 \\
 \end{array}
 \right)\,,
 \end{equation*}
@@ -195,14 +193,38 @@ and its 10th power is
 P^{10} = 
 \left(
 \begin{array}{cccc}
-1 & \cdots\\
-\vdots
+0.18 & 0.28 & 0.36 & 0.18 \\
+0.18 & 0.28 & 0.36 & 0.18 \\
+0.18 & 0.28 & 0.36 & 0.18 \\
+0.18 & 0.28 & 0.36 & 0.18 \\
 \end{array}
 \right)\,.
 \end{equation*}
 
 The transition matrix $P$ can be broken down into  $P = \alpha(H + D)
-+ \frac{1-\alpha}{n} \bf 1$, where $H =[\ldots]$ and $D =[\ldots]$.
++ \frac{1-\alpha}{n} \bf 1$, where
+\begin{equation*}
+H =
+\left(
+\begin{array}{cccc}
+0.00 & 0.67 & 0.33 & 0.00 \\
+0.00 & 0.00 & 1.00 & 0.00 \\
+0.33 & 0.33 & 0.00 & 0.33 \\
+0.00 & 0.00 & 0.00 & 0.00 \\
+\end{array}
+\right)\,.
+\end{equation*}
+and \begin{equation*}
+D =
+\left(
+\begin{array}{cccc}
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.00 & 0.00 & 0.00 & 0.00 \\
+0.25 & 0.25 & 0.25 & 0.25 \\
+\end{array}
+\right)\,.
+\end{equation*}
 
 \subsection{Results}
 

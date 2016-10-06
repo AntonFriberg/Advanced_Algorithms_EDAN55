@@ -10,13 +10,13 @@ n = int(f.readline())
 P = [[0] * n for _ in xrange(n)]  # n x n matrix with zeros
 alpha = 0.85  # damping factor
 
-#  Create Adjacency Matrix
+#  create adjacency matrix
 for line in f:
     edges = [int(s) for s in line.split() if s.isdigit()]
     for i in xrange(0, len(edges), 2):  # [from, to, from, to ...]
         P[edges[i]][edges[i + 1]] += 1  # add one edge, from -> to
 
-# print P
+print P
 
 # P[i][j] = probability of going from i to j in one step
 # P[i][j] = probability of following link + probability of random walk
@@ -45,4 +45,5 @@ def compute_by_squaring(m, x):
 
 P = compute_by_squaring(P, r)
 
-print(P[0])
+for x in range(len(P)):
+    print(P[x])
