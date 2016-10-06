@@ -51,7 +51,7 @@ def check_stability(l1, l2):
     return not (0 in c)
 
 
-# recursive method for computing A ^ r by squaring log(r) times when power of 2
+# recursive method computing A ^ r by squaring log(r) times when power of 2
 def compute_by_squaring(m, x):
     if x == 1:
         return m
