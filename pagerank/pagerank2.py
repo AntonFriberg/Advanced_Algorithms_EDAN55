@@ -1,6 +1,5 @@
 import sys
 import os
-import random
 
 cwd = os.getcwd()  # Current working directory
 path = os.path.join(cwd, "data", sys.argv[1])
