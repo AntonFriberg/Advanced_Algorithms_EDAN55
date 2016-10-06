@@ -15,13 +15,14 @@ for line in f:
     for i in xrange(0, len(edges), 2):  # [from, to, from, to ...]
         G[edges[i]] += [edges[i + 1]]
 
-print G
+#print G
 
 
 def check_stability(l1, l2):
     c = [0] * len(l1)
     for x in xrange(len(l1)):
-        if float(str(l1[x])[:6]) == float(str(l2[x])[:6]):
+
+        if float('%.04f' % l1[x]) == float('%.04f' % l2[x]):
             c[x] = 1
     return not (0 in c)
 
