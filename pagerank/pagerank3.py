@@ -1,7 +1,7 @@
 import sys
 import os
 
-cwd = os.getcwd()  # Current working directory
+cwd = os.getcwd()  # current working directory
 path = os.path.join(cwd, "data", sys.argv[1])
 f = open(path)
 r = int(sys.argv[2])  # number of iterations
