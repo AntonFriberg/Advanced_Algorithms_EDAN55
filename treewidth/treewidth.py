@@ -22,9 +22,9 @@ def construct_connections(connections, t_in, vi, visited):
         connections.append(vi)
 
 
-def independent(edge_set, graph_in):
-    for vertex in edge_set:
-        remaining_set = set(edge_set) - set([vertex])
+def independent(s, graph_in):
+    for v_i in s:
+        remaining_set = set(s) - set([v_i])
         if remaining_set & set(graph_in[n]):  # if intersection between sets different then empty set
             return False
     return True
