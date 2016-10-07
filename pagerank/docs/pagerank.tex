@@ -235,13 +235,17 @@ each graph sorted by page rank, using $\alpha = \frac{85}{100}$.
 \begin{fullwidth}
 \small
 \begin{tabular}{lcccccccccc}
-three.txt & 2 (36.6\%) & 1 (27.5\%) & 0 (18.4\%) & 3 (17.3\%) \\
-tiny.txt & [\ldots] &\\
-medium.txt &\\
-wikipedia.txt & \\
-p2p-Gnutella08-mod.txt &
+three.txt & 2 (36.4\%) & 1 (27.9\%) & 0 (17.9\%) & 0 (17.9\%) \\
+tiny.txt & 0 (27.7\%) & 3 (25.4\%) & 1 (24.5\%) & 2 (15.1\%) & 4 (7.3\%) \\
+medium.txt & 22 (5.7\%) & 6 (5.6\%) & 13 (3.8\%) & 28 (3.7\%) & 23 (3.6\%) \\
+wikipedia.txt & 1 (43.3\%) & 2 (32.2\%) & 4 (6.5\%) & 3 (3.4\%) & 5 (3.4\%) \\
+p2p-Gnutella08-mod.txt & 177 (1.5\%) & 353 (1.5\%) & 249 (1.5\%) & 247 (1.5\%) & 145 (0.8\%) \\
 \end{tabular}
 \end{fullwidth}
+
+\medskip
+Note that p2p-Gnutella08-mod.txt is a $(6301x6301)$ size matrix. As each multiplication takes $6301^3 = 250166088901$
+operations we only compute $P^2$ to limit compute time.
 
 \bigskip The following table gives the number of random walk steps and
 (scalar) multiplications needed for each graph until the results were

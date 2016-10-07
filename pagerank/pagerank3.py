@@ -1,5 +1,6 @@
 import sys
 import os
+import numpy
 
 cwd = os.getcwd()  # current working directory
 path = os.path.join(cwd, "data", sys.argv[1])
@@ -12,6 +13,7 @@ H = [[0] * n for _ in xrange(n)]
 D = [[0] * n for _ in xrange(n)]
 deg = [0] * n
 alpha = 0.85  # damping factor
+MULT = 0
 
 #  create adjacency matrix
 for line in f:
@@ -38,9 +40,16 @@ for i in xrange(n):
 
 # standard matrix multiplication
 def matrix_multiplication(m_a, m_b):
+    global MULT
+    MULT += 1
+    A = numpy.mat(m_a)  # cast as matrix
+    B = numpy.mat(m_a)
+    C = A * B
+    return C.tolist()
     # Does not work in Python 3 use list(zip(m_b)) instead of zip(*m_b)
-    return [[sum(e_a * e_b for e_a, e_b in zip(r_a, c_b))
-             for c_b in zip(*m_b)] for r_a in m_a]
+    # return [[sum(e_a * e_b for e_a, e_b in zip(r_a, c_b))
+    #          for c_b in zip(*m_b)] for r_a in m_a]
+
 
 
 def check_stability(l1, l2):
@@ -62,45 +71,65 @@ def compute_by_squaring(m, x):
 
 PthPower = compute_by_squaring(P, r)
 
-print
+P_sorted = sorted(PthPower[0])
+P_sorted.reverse()
+print PthPower[0]
+print P_sorted
 
-print "P matrix formatted for Latex"
-output = ""
-for x in xrange(len(P)):
-    x = ['{:.2f}'.format(i) for i in P[x]]
-    for i in xrange(len(P)):
-        output += x[i] + " & "
-    output = output[:-2]
-    output += "\\\\\n"
+count = 0
+s = "& "
+for value in P_sorted:
+    i = PthPower[0].index(value)
+    s += '{:d}'.format(i) + " (" + '{:.1f}'.format(value*100) + "\\%) & "
+    count += 1
+    if count > 4:
+        break
 
-# print output
+s = s[:-2]
+s += "\\\\"
+print s
+print MULT
 
-print "P^r matrix formatted for Latex"
-output = ""
-for x in xrange(len(PthPower)):
-    x = ['{:.2f}'.format(i) for i in PthPower[x]]
-    for i in xrange(len(PthPower)):
-        output += x[i] + " & "
-    output = output[:-2]
-    output += "\\\\\n"
-# print output
-
-print "H matrix formatted for Latex"
-output = ""
-for x in xrange(len(H)):
-    x = ['{:.2f}'.format(i) for i in H[x]]
-    for i in xrange(len(H)):
-        output += x[i] + " & "
-    output = output[:-2]
-    output += "\\\\\n"
-# print output
-
-print "D matrix formatted for Latex"
-output = ""
-for x in xrange(len(D)):
-    x = ['{:.2f}'.format(i) for i in D[x]]
-    for i in xrange(len(D)):
-        output += x[i] + " & "
-    output = output[:-2]
-    output += "\\\\\n"
-# print output
+#
+# PthPower = compute_by_squaring(P, r)
+#
+# print "P matrix formatted for Latex"
+# output = ""
+# for x in xrange(len(P)):
+#     x = ['{:.2f}'.format(i) for i in P[x]]
+#     for i in xrange(len(P)):
+#         output += x[i] + " & "
+#     output = output[:-2]
+#     output += "\\\\\n"
+#
+# # print output
+#
+# print "P^r matrix formatted for Latex"
+# output = ""
+# for x in xrange(len(PthPower)):
+#     x = ['{:.2f}'.format(i) for i in PthPower[x]]
+#     for i in xrange(len(PthPower)):
+#         output += x[i] + " & "
+#     output = output[:-2]
+#     output += "\\\\\n"
+# # print output
+#
+# print "H matrix formatted for Latex"
+# output = ""
+# for x in xrange(len(H)):
+#     x = ['{:.2f}'.format(i) for i in H[x]]
+#     for i in xrange(len(H)):
+#         output += x[i] + " & "
+#     output = output[:-2]
+#     output += "\\\\\n"
+# # print output
+#
+# print "D matrix formatted for Latex"
+# output = ""
+# for x in xrange(len(D)):
+#     x = ['{:.2f}'.format(i) for i in D[x]]
+#     for i in xrange(len(D)):
+#         output += x[i] + " & "
+#     output = output[:-2]
+#     output += "\\\\\n"
+# # print output
