@@ -80,7 +80,7 @@ count = 0
 s = "& "
 for value in P_sorted:
     i = PthPower[0].index(value)
-    s += '{:d}'.format(i) + " (" + '{:.1f}'.format(value*100) + "\\%) & "
+    s += '{:d}'.format(i) + " (" + '{:.2f}'.format(value*100) + "\\%) & "
     count += 1
     if count > 4:
         break
