@@ -5,8 +5,10 @@
       <module fileurl="file://$PROJECT_DIR$/independentset/independentset.iml" filepath="$PROJECT_DIR$/independentset/independentset.iml" />
       <module fileurl="file://$PROJECT_DIR$/marking/marking.iml" filepath="$PROJECT_DIR$/marking/marking.iml" />
       <module fileurl="file://$PROJECT_DIR$/maxcut/maxcut.iml" filepath="$PROJECT_DIR$/maxcut/maxcut.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pagerank/.idea/pagerank.iml" filepath="$PROJECT_DIR$/pagerank/.idea/pagerank.iml" />
       <module fileurl="file://$PROJECT_DIR$/pagerank/pagerank.iml" filepath="$PROJECT_DIR$/pagerank/pagerank.iml" />
       <module fileurl="file://$PROJECT_DIR$/rainbow/rainbow.iml" filepath="$PROJECT_DIR$/rainbow/rainbow.iml" />
+      <module fileurl="file://$PROJECT_DIR$/treewidth/.idea/treewidth.iml" filepath="$PROJECT_DIR$/treewidth/.idea/treewidth.iml" />
     </modules>
   </component>
 </project>

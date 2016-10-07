@@ -5,7 +5,31 @@ import time
 from collections import defaultdict
 from itertools import chain, combinations
 
-print(len(sys.argv))
+
+def powerset(iterable):
+    " powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    res_sets = list()
+    for s in chain.from_iterable(combinations(iterable, r) for r in range(len(iterable) + 1)):
+        res_sets.append(frozenset(s)) # need frozenset to be hashable inside a dict
+    return res_sets
+
+
+def construct_connections(con, t_in, vertex, visited):
+    if not visited[vertex]:
+        visited[vertex] = True
+        for v in t_in[vertex]:
+            construct_connections(con, t_in, v, visited)
+        con.append(vertex)
+
+
+def independent(edge_set, graph_in):
+    for vertex in edge_set:
+        remaining_set = set(edge_set) - set([vertex])
+        if remaining_set & set(graph_in[n]): # if intersection between sets different then empty set
+            return False
+    return True
+
+
 if len(sys.argv) != 2:
     print('Usage: python lab5.py filename (w/o file extension)')
     sys.exit(0)
@@ -15,82 +39,98 @@ path = os.path.join(cwd, "data", sys.argv[1])
 files = [open(path + '.gr'), open(path + '.td')]
 
 # initialize data structures
-G = dict(list)
-t_bag = dict(set)
-t_neighbors = dict(list)
-tree_t = dict(dict)
-
+G = dict()
+t_bag = dict()
+t_neighbors = defaultdict(list)
+tree_t = dict()
 
 for line in files[0]:
+    if len(line) > 0 and line[0] != 'c':
+        if line[0] == 'p':
+            n = int(line.split()[2])  # read number of nodes
+            for i in xrange(1, n + 1):
+                G[i] = []
+        else:
+            e = line.split()
+            G[int(e[0])].append(int(e[1]))
+            G[int(e[1])].append(int(e[0]))
+
+for line in files[1]:
+    if len(line) > 0 and line[0] != 'c':
+        if line[0] == 's':
+            bags = int(line.split()[2])
+            tw = int(line.split()[3])
+        elif line[0] == 'b':
+            vertices = [int(v) for v in line.split()[1:]]
+            set_components = set(vertices[1:])
+            t_bag[vertices[0]] = set_components
+            tree_t[vertices[0]] = {v:0 for v in powerset(set_components)}  # store the possible connections
+        else:
+            e = line.split()
+            e1 = int(e[0])
+            e2 = int(e[1])
+            t_neighbors[e1].append(e2)
+            t_neighbors[e2].append(e1)
+
+root = min(t_neighbors, key=lambda x: len(t_neighbors[x]))  # index of the vertex with fewest neighbors
+marked = {v: False for v in t_neighbors}
+con = list()
+construct_connections(con, t_neighbors, root, marked)
+
+print con
+print G
+
+
+# root = con[len(con) - 1]
+def maxsum(num_neighbors, tree_t, t_bag, e_set, vertex):
+    l1 = list()
+    for v1 in num_neighbors:
+        l2 = list()
+        for v2 in tree_t[v1]:
+            size = tree_t[v2, v2]
+            if size > 0: # not a connection
+                v1_n_e = t_bag[v1] & e_set # intersection betwen v1's bag and e_set
+                v2_n_v = v2 & t_bag[vertex] # intersection between v2 and vertex's bag
+                if v1_n_e == v2_n_v:
 
 
 
-def parse(files):
-    # d = 'data/'
-    g_rows = open(files[0]).read().split('\n')
-    t_rows = open(files[1]).read().split('\n')
-    G = dict(list)
-    t_bag = dict(set)
-    t_neighbors = dict(list)
-    tree_t = dict(dict)
-    g_nodes = ''
-    for r in g_rows:
-        if len(r) > 0:
-            if r[0] == 'p':
-                g_nodes = int(r.split()[2])
-                for i in range(1, g_nodes + 1):
-                    G[i] = []
-            elif r[0] == 'c':
-                pass
-            else:
-                edge = r.split()
-                if int(edge[0]) > g_nodes or int(edge[1]) > g_nodes:
-                    print('Invalid edge: ' + edge[0] + ' -> ' + edge[1])
-                    sys.exit(0)
-                G[int(edge[0])].append(int(edge[1]))
-                G[int(edge[1])].append(int(edge[0]))
-    bags = tw = ''
-    for r in t_rows:
-        if len(r) > 0:
-            if r[0] == 's':
-                bags = int(r.split()[2])
-                tw = int(r.split()[3])
 
-            elif r[0] == 'b':
-                nodes = [int(n) for n in r.split()[1:]]
-                s_set = frozenset(nodes[1:])
-                tree_t[nodes[0]] = {k: 0 for k in powerset(s_set)}
-                t_bag[nodes[0]] = s_set
-            elif r[0] == 'c':
-                pass
-            else:
-                edge = r.split()
-                if int(edge[0]) > g_nodes or int(edge[1]) > g_nodes:
-                    print('Invalid edge: ' + edge[0] + ' -> ' + edge[1])
-                    sys.exit(0)
-                t_neighbors[int(edge[0])].append(int(edge[1]))
-                t_neighbors[int(edge[1])].append(int(edge[0]))
-
-    root = min(t_neighbors, key=lambda x: len(t_neighbors[x]))
-    visited = {k: False for k in t_neighbors}
-    l = list()
-    build_list(l, t_neighbors, root, visited)
-    # print(l)
-    # print(G)
-    # print(independent(frozenset([1,3,5]), G))
-    first = time.clock()
-    run(t_bag, t_neighbors, tree_t, G, l)
-    print((time.clock() - first))
+def maxsum(ninjos, T_t, T_b, u, node):
+    t_list = list()
+    for n in ninjos:
+        u_list = list()
+        for ui in T_t[n]:
+            size = T_t[n][ui]  # U_i
+            if size > 0:  # independent
+                ui_vt = ui.intersection(T_b[node])
+                u_vn = u.intersection(T_b[n])
+                if ui_vt == u_vn:
+                    w = ui.intersection(u)
+                    u_list.append(size - len(w))
+        if u_list: t_list.append(max(u_list))
+    return sum(t_list)
 
 
-def build_list(l, T_n, node, visited):
-    if visited[node]:
-        pass
+for vertex in con:
+    if len(t_neighbors[vertex]) and vertex != root: # no children or root
+        for edge_set in tree_t[vertex]:
+            if independent(edge_set, G):
+                tree_t[vertex][edge_set] = len(edge_set)
+                #print('Bag: ' + str(vertex))
+                #print tree_t[vertex]
     else:
-        visited[node] = True
-        for c in T_n[node]:
-            build_list(l, T_n, c, visited)
-        l.append(node)
+        for edge_set in tree_t[vertex]:
+            if independent(edge_set, G):
+                tree_t[vertex, edge_set] = len(edge_set) + maxsum(t_neighbors[vertex], tree_t, t_bag, edge_set, vertex)
+
+
+
+
+
+
+
+
 
 
 def run(T_b, treeNeighbors, T_t, G, l):
@@ -112,20 +152,6 @@ def run(T_b, treeNeighbors, T_t, G, l):
     print(max(m.values()))
 
 
-def maxsum(ninjos, T_t, T_b, u, node):
-    t_list = list()
-    for n in ninjos:
-        u_list = list()
-        for ui in T_t[n]:
-            size = T_t[n][ui]  # U_i
-            if size > 0:  # independent
-                ui_vt = ui.intersection(T_b[node])
-                u_vn = u.intersection(T_b[n])
-                if ui_vt == u_vn:
-                    w = ui.intersection(u)
-                    u_list.append(size - len(w))
-        if u_list: t_list.append(max(u_list))
-    return sum(t_list)
 
 
 def independent(s, G):
@@ -134,11 +160,3 @@ def independent(s, G):
         if k.intersection(set(G[n])):
             return False
     return True
-
-
-def powerset(in_set):
-    # print(in_set)
-    res = list()
-    for z in chain.from_iterable(combinations(in_set, r) for r in range(len(in_set) + 1)):
-        res.append(frozenset(z))
-    return res
